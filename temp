@@ -1,0 +1,19 @@
+Bad design
+
+1) I-Card
+Issue: The I-Card can be used in the library to mark the in time and exit time. To do that we have to scan the I-Card at the entrance of the library, but during that process the I-Card backside doesn’t get scanned easily due to the design of the bar code and the plastic cover over it.
+Suggestion: This can be improved by removing the top bulging part of the cover which is present above the bar code
+
+2) Finding respective switches
+Issue: It is hard to find the switch for respective fan or light. This becomes a tedious task and when it comes to increase the speed then again we have spend lot of time into that.
+Suggestion: Numbering can be used over their, or based on the orientation of fans, switch posiiton can be changed.
+
+
+
+Good design
+1) Light sensors
+Reason: Its very important to utilize the resoures efficently and save electricity. As we can see the lights are turned on only when there is certain movement i.e, if any person passes from that region. 
+
+2) Fire safety equipments
+Reason: On every floor of the college building there are fire safety equipments. This is very important if any fire related incident happens and safety steps can be taken.
+
