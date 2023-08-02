@@ -18,7 +18,8 @@ string prd(const float x, const int decDigits, const int width) {
 }
 
 // merge function
-void merge(item items[], int start, int mid, int end){
+// type parameter is used for sorting based on profit by weight ratio(1), by profit(2), by weight(3)
+void merge(item items[], int start, int mid, int end, int type){
     int lSize = mid-start+1;
     int rSize = end-mid;
 
@@ -29,10 +30,26 @@ void merge(item items[], int start, int mid, int end){
 
     int i=0, j=0, k=start;
     while(i<lSize && j<rSize){
-        if(lArr[i].pbyw > rArr[j].pbyw){
-            items[k++] = lArr[i++];
-        }else{
-            items[k++] = rArr[j++];
+        if(type==1){
+            if(lArr[i].pbyw > rArr[j].pbyw){
+                items[k++] = lArr[i++];
+            }else{
+                items[k++] = rArr[j++];
+            }
+        }
+        if(type==2){
+            if(lArr[i].profit > rArr[j].profit){
+                items[k++] = lArr[i++];
+            }else{
+                items[k++] = rArr[j++];
+            }
+        }
+        if(type==3){
+            if(lArr[i].weight > rArr[j].weight){
+                items[k++] = lArr[i++];
+            }else{
+                items[k++] = rArr[j++];
+            }
         }
     }
 
@@ -41,15 +58,38 @@ void merge(item items[], int start, int mid, int end){
 }
 
 // merge sort function
-void mergesort(item items[], int start, int end){
+// type parameter is used for sorting based on profit by weight ratio(1), by profit(2), by weight(3)
+void mergesort(item items[], int start, int end, int type){
     if(start>=end) return;
     
     int mid = (end+start)/2;
 
-    mergesort(items, start, mid);
-    mergesort(items, mid+1, end);
-    merge(items, start, mid, end);
+    mergesort(items, start, mid, type);
+    mergesort(items, mid+1, end, type);
+    merge(items, start, mid, end, type);
 }
+
+void calc_profit(int maxWeight, item items[], int n){
+    cout << "item picked" << endl;
+    cout << "Item weight\t item profit \t total profit"<<endl;
+    int total_profit= 0;
+    for(int i=0; i<n; i++){
+        if(maxWeight - items[i].weight >= 0){
+            maxWeight -= items[i].weight;
+            total_profit += items[i].profit;
+            cout << prd(items[i].weight, 0, 15) << " | " << prd(items[i].profit, 0, 15) << " | " <<prd(total_profit, 2, 10) << "\n";
+        
+        }else{
+            total_profit += (maxWeight/items[i].weight) * items[i].profit;
+            string str =  (maxWeight>0) ? "yes - original weight= "+to_string(items[i].weight): "no";
+            cout << prd(maxWeight, 0, 15) << " | " << prd(items[i].profit, 0, 15) << " | " <<prd(total_profit, 2, 10) << " | Picked ?" << str << "\n";
+            break;
+        }
+    }
+    cout << "\nTotal profit is: " << total_profit << endl;
+
+}
+
 
 int main(){
 
@@ -79,30 +119,22 @@ int main(){
     cout << "Items: " << n << endl;
     cout << "Capacity: " << maxWeight << endl << endl;
     
-    mergesort(items, 0, n-1);
     
-    cout << "Item weight\t item profit \t porfit by weight"<<endl;
-    for(int i=0; i<n; i++){
-        cout << prd(items[i].weight, 0, 15) << " | " << prd(items[i].profit, 0, 15) << " | " <<prd(items[i].pbyw, 2, 10) << "\n";
-    }
+    cout << "\n\nBased on profit by weight ration\n";
+    mergesort(items, 0, n-1, 1);
+    calc_profit(maxWeight, items, n);
 
-    cout << endl << endl;
-    cout << "item picked" << endl;
-    cout << "Item weight\t item profit \t total profit"<<endl;
-    int total_profit= 0;
-    for(int i=0; i<n; i++){
-        if(maxWeight-items[i].weight >= 0){
-            maxWeight -= items[i].weight;
-            total_profit += items[i].profit;
-            cout << prd(items[i].weight, 0, 15) << " | " << prd(items[i].profit, 0, 15) << " | " <<prd(total_profit, 2, 10) << "\n";
-        
-        }else{
-            total_profit += (maxWeight/items[i].weight) * items[i].profit;
-            cout << prd(maxWeight, 0, 15) << " | " << prd(items[i].profit, 0, 15) << " | " <<prd(total_profit, 2, 10) << "\n";
 
-        }
-    }
-    cout << "\nTotal profit is: " << total_profit << endl;
+    cout << "\n\nBased on profit\n";
+    mergesort(items, 0, n-1, 2);
+    calc_profit(maxWeight, items, n);
+
+    cout << "\n\nBased on weight\n";
+    mergesort(items, 0, n-1, 3);
+    calc_profit(maxWeight, items, n);
 
     return 0;
 }
+
+
+//1-a : theory
