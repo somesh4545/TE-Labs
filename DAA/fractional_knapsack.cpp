@@ -45,7 +45,7 @@ void merge(item items[], int start, int mid, int end, int type){
             }
         }
         if(type==3){
-            if(lArr[i].weight > rArr[j].weight){
+            if(lArr[i].weight < rArr[j].weight){
                 items[k++] = lArr[i++];
             }else{
                 items[k++] = rArr[j++];
@@ -69,35 +69,40 @@ void mergesort(item items[], int start, int end, int type){
     merge(items, start, mid, end, type);
 }
 
-void calc_profit(int maxWeight, item items[], int n){
+// type parameter for fractional knapsack or 1/0 based
+void calc_profit(int capacity, item items[], int n, int type){
     cout << "item picked" << endl;
     cout << "Item weight\t item profit \t total profit"<<endl;
     int total_profit= 0;
     for(int i=0; i<n; i++){
-        if(maxWeight - items[i].weight >= 0){
-            maxWeight -= items[i].weight;
+        if(capacity - items[i].weight >= 0){
+            capacity -= items[i].weight;
             total_profit += items[i].profit;
             cout << prd(items[i].weight, 0, 15) << " | " << prd(items[i].profit, 0, 15) << " | " <<prd(total_profit, 2, 10) << "\n";
         
         }else{
-            total_profit += (maxWeight/items[i].weight) * items[i].profit;
-            string str =  (maxWeight>0) ? "yes - original weight= "+to_string(items[i].weight): "no";
-            cout << prd(maxWeight, 0, 15) << " | " << prd(items[i].profit, 0, 15) << " | " <<prd(total_profit, 2, 10) << " | Picked ?" << str << "\n";
-            break;
+            if(type == 1){
+                total_profit += (capacity/items[i].weight) * items[i].profit;
+                string str =  (capacity>0) ? "yes - original weight= "+to_string(items[i].weight): "no";
+                cout << prd(capacity, 0, 15) << " | " << prd(items[i].profit, 0, 15) << " | " <<prd(total_profit, 2, 10) << " | Picked ?" << str << "\n";
+                capacity = 0; 
+            }
+            if(capacity == 0) break;
         }
     }
     cout << "\nTotal profit is: " << total_profit << endl;
+    cout << "Is bag empty: " << (capacity<=0 ? "no" : "yes") << endl;
 
 }
 
 
 int main(){
 
-    int n, maxWeight;
+    int n, capacity;
     cout << "Enter the count of items: ";
     cin >> n;
     cout << "Enter capacity of bag: ";
-    cin >> maxWeight;
+    cin >> capacity;
 
     item items[n];
 
@@ -117,21 +122,27 @@ int main(){
 
     cout << "\n\nAvailable data\n";
     cout << "Items: " << n << endl;
-    cout << "Capacity: " << maxWeight << endl << endl;
+    cout << "Capacity: " << capacity << endl << endl;
     
-    
+    int type=0;
     cout << "\n\nBased on profit by weight ration\n";
+    cout << "1.Fractional knapsack 2.1/0 knapsack: ";
+    cin >> type;
     mergesort(items, 0, n-1, 1);
-    calc_profit(maxWeight, items, n);
+    calc_profit(capacity, items, n, type);
 
 
     cout << "\n\nBased on profit\n";
+    cout << "1.Fractional knapsack 2.1/0 knapsack: ";
+    cin >> type;
     mergesort(items, 0, n-1, 2);
-    calc_profit(maxWeight, items, n);
+    calc_profit(capacity, items, n, type);
 
     cout << "\n\nBased on weight\n";
+    cout << "1.Fractional knapsack 2.1/0 knapsack: ";
+    cin >> type;
     mergesort(items, 0, n-1, 3);
-    calc_profit(maxWeight, items, n);
+    calc_profit(capacity, items, n, type);
 
     return 0;
 }
