@@ -18,7 +18,7 @@ int find_max_profit(item items[], int capacity, int n){
     // setting row1 and column1 as zero
     for(int i=0; i<capacity+1; i++) dp[0][i] = 0;
     for(int i=0; i<n+1; i++) dp[i][0] = 0;
-
+    cout << "\nDP table\n";
     for(int i=1; i<n+1; i++){
         for(int j=1; j<capacity+1; j++){
             if(items[i-1].weight > j){
@@ -26,9 +26,9 @@ int find_max_profit(item items[], int capacity, int n){
             }else{
                 dp[i][j] = max(items[i-1].profit+dp[i-1][j-items[i-1].weight], dp[i-1][j]);
             }
-            // cout << dp[i][j] << " ";
+            cout << dp[i][j] << " ";
         }
-        // cout <<  endl;
+        cout <<  endl;
     }
 
     if(ch=='y'){
@@ -37,7 +37,7 @@ int find_max_profit(item items[], int capacity, int n){
             if(dp[i][j] == dp[i-1][j]){
                 i--;
             }else{
-                cout<<"\nItem picked: "<<i;
+                cout<<"\nItem picked: "<<i << " Weight-"<<items[i-1].weight << " Profit-"<<items[i-1].profit;
                 j = j-items[i-1].weight;
                 i--;
             }
