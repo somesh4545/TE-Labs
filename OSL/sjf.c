@@ -16,7 +16,7 @@ void os_sjf(int process[MAX][8], int n, int col, int total_time){
         // [1] arrival time [2] burst time [3] remaining execution
         int index = 0, bt=process[0][3], at=process[0][1];
         for(j=1; j<n; j++){
-            if(process[j][1] < process[index][1] && process[j][3]!=0) index = j;
+            if(process[j][1] < process[index][1] && process[j][3]<process[index][3] && process[j][3]!=0) index = j;
             else if(process[j][1]==process[index][1] && 
                     process[j][3]<process[index][3] && 
                     process[j][3]!=0) index = j;
@@ -50,7 +50,7 @@ void os_sjf(int process[MAX][8], int n, int col, int total_time){
  
 int main ( ) {
     // [1] arrival time [2] burst time [3] remaining execution
-    // [4] CT [5] TAT [6] WT
+    // [4] CT [5] TAT [6] WT [7] original at
     int process[MAX][8];
     
     int n;
