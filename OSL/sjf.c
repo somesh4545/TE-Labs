@@ -5,25 +5,29 @@
 // Enter the arrival time: 2 5 1 0 4
 // Enter the burst time: 6 2 8 3 4
 
-void os_sjf(int process[MAX][8], int n, int col, int total_time){
+void os_sjf(int process[MAX][8], int n, int col, int start_time, int total_time){
     int i=0, j=0;
     int ct=process[0][1], tat=0, wt=0;
     int t_tat=0, t_wt=0;
-    for(i=0; i<total_time; i++){
+    for(i=start_time; i<=total_time; i++){
 
 
         // finding the process which has lower arrival time + bt 
         // [1] arrival time [2] burst time [3] remaining execution
-        int index = 0, bt=process[0][3], at=process[0][1];
-        for(j=1; j<n; j++){
-            if(process[j][1] < process[index][1] && process[j][3]<process[index][3] && process[j][3]!=0) index = j;
-            else if(process[j][1]==process[index][1] && 
-                    process[j][3]<process[index][3] && 
-                    process[j][3]!=0) index = j;
-            else if(process[index][3]==0) index=j;
+        int index = 0;
+        while(index<n && process[index][1]>i && process[index][3]!=0) index++;
+        // printf("\n%d\n", index);
+        for(j=0; j<n; j++){
+            if(j==index || process[j][7]>i) continue;
+            if(i==5 && j==1){
+                printf("\n%d %d\n", process[j][1], process[index][1]);
+                printf("\%d\n", (process[j][1]<=process[index][1]));
+            } 
+            if(process[j][3] < process[index][3] && process[j][1]<=process[index][1]  && process[j][3]!=0)
+                index = j;
         }
-        printf("%d\n", index);
-        process[index][1] = i;
+        printf("\n%d - %d",i+1, index+1);
+        process[index][1] = i+1;
         process[index][3] -= 1;
         if(process[index][3]==0){
             // [4] CT [5] TAT [6] WT
@@ -68,6 +72,7 @@ int main ( ) {
         process[i][7] = process[i][1];
         total_time = total_time<process[i][1] ? total_time : process[i][1];
     }
+    int start_time = total_time;
     printf("Enter the burst time: ");
     for(i=0; i<n; i++){
         scanf("%d", &process[i][2]);
@@ -75,7 +80,7 @@ int main ( ) {
         process[i][3] = process[i][2];
     }
     
-    os_sjf(process, n, 8, total_time);
+    os_sjf(process, n, 8, start_time, total_time);
 
     return 0;
 }
