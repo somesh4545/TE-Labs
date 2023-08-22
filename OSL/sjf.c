@@ -15,25 +15,28 @@ void os_sjf(int process[MAX][8], int n, int col, int start_time, int total_time)
         // finding the process which has lower arrival time + bt 
         // [1] arrival time [2] burst time [3] remaining execution
         int index = 0;
-        while(index<n && process[index][1]>i && process[index][3]!=0) index++;
-        // printf("\n%d\n", index);
+        while(index<n && process[index][7]>i && process[index][3]>0) index++;
         for(j=0; j<n; j++){
+            // if the index is same then dont check if arrival time is more than current time
             if(j==index || process[j][7]>i) continue;
-            if(i==5 && j==1){
-                printf("\n%d %d\n", process[j][1], process[index][1]);
-                printf("\%d\n", (process[j][1]<=process[index][1]));
-            } 
-            if(process[j][3] < process[index][3] && process[j][1]<=process[index][1]  && process[j][3]!=0)
-                index = j;
+
+            // if remanining burst time is 0 update the index
+            if(process[index][3]==0) {index=j; continue;}
+
+            // update index if found any process with less burst time and inside the current time
+            if(process[j][3] < process[index][3] && process[j][3]!=0){
+                if(process[j][1] <= i)
+                    index = j;
+            }
         }
-        printf("\n%d - %d",i+1, index+1);
-        process[index][1] = i+1;
         process[index][3] -= 1;
         if(process[index][3]==0){
             // [4] CT [5] TAT [6] WT
             process[index][4] = i+1;
             process[index][5] = i+1 - process[index][7];
+            t_tat+=process[index][5];
             process[index][6] = process[index][5] - process[index][2];
+            t_wt += process[index][6];
         }
     }
     printf("\n\nPID\tAT\tBt\tCT\tTaT\tWT\n");
@@ -45,11 +48,11 @@ void os_sjf(int process[MAX][8], int n, int col, int start_time, int total_time)
                 printf("%d\t",process[i][j]); 
         printf("\n");
     }
-    // float avg_tat = (float)t_tat/n;
-    // float avg_wt = (float)t_wt/n;
-    // printf("\n\nStats\n");
-    // printf("Avg TAT: %f\n", avg_tat);
-    // printf("Avg WT: %f\n", avg_wt);
+    float avg_tat = (float)t_tat/n;
+    float avg_wt = (float)t_wt/n;
+    printf("\n\nStats\n");
+    printf("Avg TAT: %f\n", avg_tat);
+    printf("Avg WT: %f\n", avg_wt);
 }
  
 int main ( ) {
