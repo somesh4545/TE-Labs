@@ -3,6 +3,7 @@
         "ostream": "cpp",
         "limits": "cpp",
         "iostream": "cpp",
-        "variant": "c"
+        "variant": "c",
+        "shared_mutex": "c"
     }
 }
